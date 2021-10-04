@@ -1,0 +1,100 @@
+﻿@model TODOAPP_DOTNETCOREMVC.ViewModels.ListDetailsViewModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "My TODO List";
+    string selectedTaskTitle = null;
+    if (Model != null)
+    {
+        selectedTaskTitle = Model.AllLists.SingleOrDefault(l => l.Id == Model.SelectedListId).Name;
+    }
+}
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<div class="col-md-12 row" style="margin-top:100px">
+    <span class="text-white text-start display-6 col-12 mb-4">My lists</span>
+    @if (Model != null)
+    {
+        <div class="col-md-4">
+            <div class="">
+                @foreach (var taskList in Model.AllLists)
+                {
+                    <div class="w-100 d-inline-block m-2 row">
+                        <a class="text-white w-100 d-inline-block todo-list"
+                           href="?id=@taskList.Id">
+                            <i class="far fa-circle"></i>&nbsp;&nbsp;@taskList.Name
+                        </a>
+                    </div>
+                }
+
+            </div>
+        </div>
+        <div class="col-md-8 bg-white" style="border-radius: 3px;">
+            <div class="row tasks-div border">
+                @if (selectedTaskTitle != null)
+                {
+                    <div class="text-start tasks-header col-md-6 my-auto ps-5">
+                        <span>@selectedTaskTitle</span>
+                    </div>
+                    <div class="text-end col-md-6 my-auto pe-5" style="color: #4e4e4e; ">
+                        <span></span>
+                    </div>
+                }
+            </div>
+            <div class="mt-4 row">
+                @if (Model.AllListTasks.Count > 0)
+                {
+
+                    @foreach (var taskitem in Model.AllListTasks)
+                    {
+                        <div class="w-100 py-1 row">
+                            <div class="col-md-8">
+                                <a class="task-item" href="#">
+                                    <i class="far fa-circle"></i>&nbsp;&nbsp;@taskitem.TaskDetails
+                                </a>
+                            </div>
+                            <form class="col-md-4 text-end" asp-controller="MyToDoList" asp-action="DeleteTask" method="post">
+                                <button class="task-item btn btn-danger bg-white text-danger border-light" type="submit">
+                                    <i class="fas fa-eraser"></i>
+                                </button>
+                                <input name="ListId" value="@Model.SelectedListId" hidden />
+                                <input name="TaskId" value="@taskitem.Id" hidden />
+                            </form>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="alert-danger p-4 display-6 w-100">No Task in this list !</div>
+                }
+            </div>
+            <div class="col-md-12 row my-4">
+                <label class="my-auto text-info col-2 newtaskinputlabel" for="newtaskinput"><i class="fas fa-plus"></i></label>
+                <form class="col-md-10" asp-controller="MyToDoList" asp-action="AddTaskToList" method="post">
+                    <input class="new-task-input w-100" name="ListId" type="hidden" value="@Model.SelectedListId" />
+                    <input class="new-task-input w-100" name="NewTask" id="newtaskinput" type="text" />
+                </form>
+            </div>
+        </div>
+        <div class="col-md-12 row mt-4">
+            <div class="col-md-4"></div>
+            <div class="col-md-8 row">
+                <div class="col-md-6 text-start">
+                </div>
+                <form class="col-md-6 text-end" asp-action="DeleteList" method="post">
+                    <button type="submit" class="actionbtns btn btn-light">Delete List</button>
+                    <input name="ListId" value="@Model.SelectedListId" hidden />
+                </form>
+            </div>
+        </div>
+    }
+    else
+    {
+        <span class="text-sm-start alert-danger p-4 display-6">No TODO List is available</span>
+    }
+</div>
+<div class="col-md-4 add-list row ps-2">
+    <label class="my-auto col-1 newlistinputlabel" for="newlistinput"><i class="fas fa-plus"></i></label>
+    <form class="col-md-11" asp-controller="MyToDoList" asp-action="AddToDoList" method="post">
+        <input name="newList" class="new-list-input w-100" id="newlistinput" type="text" />
+    </form>
+</div>
