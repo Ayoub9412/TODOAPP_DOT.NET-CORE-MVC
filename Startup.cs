@@ -39,15 +39,16 @@ namespace TODOAPP_DOTNETCOREMVC
             /// add-migration "Initial_Create"
             /// update-database
             /// 
-            //services.AddScoped<IMyTodoListRepository<MyToDoList>, DBToDoListRepository>();
-            //services.AddScoped<IMyTodoListRepository<MyTodoTask>, DbTaskRepository>();
-            //services.AddDbContext<AppDbContext>(
-            //    options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddScoped<IMyTodoListRepository<MyToDoList>, DBToDoListRepository>();
+            services.AddScoped<IMyTodoListRepository<MyTodoTask>, DbTaskRepository>();
+            services.AddDbContext<AppDbContext>(
+                options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
 
             // enable when using  the repository that deals with in memory list
-            services.AddSingleton<IMyTodoListRepository<MyToDoList>, MyToDoListRepository>();
-            services.AddSingleton<IMyTodoListRepository<MyTodoTask>, MyListTaskRepository>();
+            // disable above services to ignore them
+            //services.AddSingleton<IMyTodoListRepository<MyToDoList>, MyToDoListRepository>();
+            //services.AddSingleton<IMyTodoListRepository<MyTodoTask>, MyListTaskRepository>();
 
 
 
